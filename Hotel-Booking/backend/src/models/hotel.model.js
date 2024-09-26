@@ -24,6 +24,7 @@ const hotelSchema = new Schema(
         },
         type: {
             type: String,
+            enum:["budget","luxury","resort"],
         },
         adultCount: {
             type: Number,
