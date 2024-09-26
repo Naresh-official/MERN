@@ -11,8 +11,8 @@ dbConnect()
             console.error("Error connecting to MongoDB : ", error);
             throw error;
         });
-        app.listen(3000, () => {
-            console.log("Example app listening on port 3000!");
+        app.listen(8000, () => {
+            console.log("Example app listening on port 8000!");
         });
     })
     .catch((error) => {
