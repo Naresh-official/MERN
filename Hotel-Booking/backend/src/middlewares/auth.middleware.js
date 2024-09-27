@@ -1,21 +1,29 @@
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
+import jwt from "jsonwebtoken";
 
-export default function verifyToken(req, res, next) {
+export default async function verifyToken(req, res, next) {
     try {
         const token = req.cookies?.token;
-        const { userId } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        if (!userId) {
+        if (!token) {
             return res.status(401).send({
                 statusCode: 401,
-                data: "Unauthorized Request",
+                message: "Token not found",
                 success: false,
             });
         }
-        const user = User.findById(userId);
+        const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId) {
+            return res.status(401).send({
+                statusCode: 401,
+                message: "Unauthorized Request",
+                success: false,
+            });
+        }
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(401).send({
                 statusCode: 401,
-                data: "Invalid Access Token",
+                message: "Invalid Access Token",
                 success: false,
             });
         }
@@ -24,7 +32,7 @@ export default function verifyToken(req, res, next) {
     } catch (error) {
         return res.status(401).send({
             statusCode: 401,
-            data: error?.message || "Invalid Access Token",
+            message: error?.message || "Invalid Access Token",
             success: false,
         });
     }
