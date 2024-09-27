@@ -35,6 +35,14 @@ const hotelSchema = new Schema(
         },
         facilities: {
             type: [String],
+            enum: [
+                "wifi",
+                "parking",
+                "ac",
+                "indoor pool",
+                "outdoor pool",
+                "gym",
+            ],
         },
         images: {
             type: [String],
