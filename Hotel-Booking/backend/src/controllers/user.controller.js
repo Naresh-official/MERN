@@ -1,3 +1,4 @@
+import { Booking } from "../models/booking.model.js";
 import { User } from "../models/user.model.js";
 
 export const registerUser = async (req, res) => {
@@ -83,4 +84,22 @@ export const getUser = async (req, res) => {
         message: "User fetched successfully",
         data: req.user,
     });
+};
+
+export const getMyBookings = async (req, res) => {
+    try {
+        const bookings = await Booking.find({ user: req.user._id }).populate(
+            "hotel"
+        );
+        return res.status(200).json({
+            success: true,
+            message: "Bookings fetched successfully",
+            data: bookings,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Internal server error",
+        });
+    }
 };
