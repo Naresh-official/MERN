@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Hotel } from "../models/hotel.model.js";
 import constructSearchQuery from "../utils/searchQuery.js";
+import { Booking } from "../models/booking.model.js";
 
 export const searchHotels = async (req, res) => {
     try {
@@ -74,6 +75,52 @@ export const getHotelById = async (req, res) => {
             success: true,
             message: "Hotel fetched successfully",
             data: hotel,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Internal server error",
+        });
+    }
+};
+
+export const bookHotel = async (req, res) => {
+    try {
+        const { hotelId } = req.params;
+        const { checkIn, checkOut, adultCount, childrenCount } = req.body;
+        if (!hotelId || !mongoose.Types.ObjectId.isValid(hotelId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid hotel id",
+            });
+        }
+        const hotel = await Hotel.findById(hotelId);
+        if (!hotel) {
+            return res.status(400).json({
+                success: false,
+                message: "Hotel not found",
+            });
+        }
+        const noOfNights = Math.ceil(
+            (new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24)
+        );
+        const totalPrice = noOfNights * hotel.pricePerNight;
+        const booking = await Booking.create({
+            hotel: hotelId,
+            user: req.user._id,
+            checkIn,
+            checkOut,
+            adultCount,
+            childrenCount,
+            totalPrice,
+        });
+        hotel.bookings.push(booking._id);
+        await hotel.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Hotel booked successfully",
+            data: { ...booking._doc, noOfNights },
         });
     } catch (error) {
         return res.status(500).json({

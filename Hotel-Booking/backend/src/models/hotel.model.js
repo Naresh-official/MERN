@@ -57,6 +57,12 @@ const hotelSchema = new Schema(
             min: 0,
             max: 5,
         },
+        bookings: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Booking",
+            },
+        ],
     },
     { timestamps: true }
 );
