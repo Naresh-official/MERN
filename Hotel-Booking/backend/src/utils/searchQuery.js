@@ -29,9 +29,9 @@ export default function constructSearchQuery(query) {
             $lte: parseInt(query.maxPrice),
         };
     }
-    if (query.stars) {
-        queryObject.stars = {
-            $gte: parseInt(query.stars),
+    if (query.rating) {
+        queryObject.rating = {
+            $gte: parseInt(query.rating),
         };
     }
     return queryObject;

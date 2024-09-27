@@ -7,7 +7,33 @@ export const searchHotels = async (req, res) => {
         const pageNumber = parseInt(req.query.page) || 1;
         const skip = (pageNumber - 1) * pageSize;
         const query = constructSearchQuery(req.query);
-        const hotels = await Hotel.find(query).skip(skip).limit(pageSize);
+
+        // sorting logic based on query
+        let sortObject = {};
+        if (req.query.sort) {
+            switch (req.query.sort) {
+                case "rating": {
+                    sortObject = { rating: -1 };
+                    break;
+                }
+                case "pricePerNightAsc": {
+                    sortObject = { pricePerNight: 1 };
+                    break;
+                }
+                case "pricePerNightDesc": {
+                    sortObject = { pricePerNight: -1 };
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+        
+        const hotels = await Hotel.find(query)
+            .sort(sortObject)
+            .skip(skip)
+            .limit(pageSize);
         const total = await Hotel.find(query).countDocuments();
         return res.status(200).json({
             success: true,
