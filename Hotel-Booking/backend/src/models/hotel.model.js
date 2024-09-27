@@ -5,7 +5,7 @@ const hotelSchema = new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            // required: true,
+            required: true,
         },
         name: {
             type: String,
@@ -24,13 +24,14 @@ const hotelSchema = new Schema(
         },
         type: {
             type: String,
-            enum:["budget","luxury","resort"],
+            enum: ["budget", "luxury", "resort"],
         },
         adultCount: {
             type: Number,
         },
         childrenCount: {
             type: Number,
+            default: 0,
         },
         facilities: {
             type: [String],
