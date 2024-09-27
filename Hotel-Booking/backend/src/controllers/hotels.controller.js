@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Hotel } from "../models/hotel.model.js";
 import constructSearchQuery from "../utils/searchQuery.js";
 
@@ -29,7 +30,7 @@ export const searchHotels = async (req, res) => {
                 }
             }
         }
-        
+
         const hotels = await Hotel.find(query)
             .sort(sortObject)
             .skip(skip)
@@ -44,6 +45,35 @@ export const searchHotels = async (req, res) => {
                 page: pageNumber,
                 pages: Math.ceil(total / pageSize),
             },
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Internal server error",
+        });
+    }
+};
+
+export const getHotelById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid hotel id",
+            });
+        }
+        const hotel = await Hotel.findById(id);
+        if (!hotel) {
+            return res.status(400).json({
+                success: false,
+                message: "Hotel not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Hotel fetched successfully",
+            data: hotel,
         });
     } catch (error) {
         return res.status(500).json({
