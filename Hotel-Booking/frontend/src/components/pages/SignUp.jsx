@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { verifyEmail } from "../../utils/services.js";
+import { verifyEmail } from "../../lib/services.js";
 import axios from "axios";
 
 function SignUp() {
@@ -13,6 +13,8 @@ function SignUp() {
     });
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+
+    const baseUrl = import.meta.env.VITE_BASE_URL || "";
 
     async function handleSignUp(e) {
         e.preventDefault();
@@ -33,7 +35,7 @@ function SignUp() {
 
         try {
             const { data } = await axios.post(
-                "http://localhost:8000/api/v1/user/register",
+                `${baseUrl}/api/v1/user/signup`,
                 formData
             );
             if (data.success === true) return navigate("/login");

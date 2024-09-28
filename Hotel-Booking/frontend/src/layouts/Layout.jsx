@@ -9,11 +9,11 @@ import axios from "axios";
 function Layout() {
     const dispatch = useDispatch();
     const fetchcurrentUser = async () => {
+        const baseUrl = import.meta.env.VITE_BASE_URL || "";
         try {
-            const { data } = await axios.get(
-                "http://localhost:8000/api/v1/user/me",
-                { withCredentials: true }
-            );
+            const { data } = await axios.get(`${baseUrl}/api/v1/user/me`, {
+                withCredentials: true,
+            });
             if (data.success) {
                 dispatch(login(data?.data));
             }

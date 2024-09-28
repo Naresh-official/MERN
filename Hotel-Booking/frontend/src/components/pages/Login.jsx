@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { verifyEmail } from "../../utils/services.js";
+import { verifyEmail } from "../../lib/services.js";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { login } from "../../store/features/authSlice.js";
@@ -16,6 +16,8 @@ function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const baseUrl = import.meta.env.VITE_BASE_URL || " ";
+
     async function handleLogin(e) {
         e.preventDefault();
         if (formData.email === "") return setError("Please enter your email");
@@ -26,7 +28,7 @@ function Login() {
         setError(null);
         try {
             const { data } = await axios.post(
-                "http://localhost:8000/api/v1/user/login",
+                `${baseUrl}/api/v1/user/login`,
                 formData,
                 { withCredentials: true }
             );
