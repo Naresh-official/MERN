@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { verifyEmail } from "../../utlis/services.js";
+import { verifyEmail } from "../../utils/services.js";
 import axios from "axios";
 import { Link } from "react-router-dom";
 

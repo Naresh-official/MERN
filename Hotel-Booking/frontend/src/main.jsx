@@ -1,7 +1,10 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import { store } from "./store/store";
+import { Provider } from "react-redux";
+
+// import pages
 import Layout from "./layouts/Layout";
 import Home from "./components/pages/Home.jsx";
 import SignUp from "./components/pages/SignUp.jsx";
@@ -29,7 +32,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-    <StrictMode>
+    <Provider store={store}>
         <RouterProvider router={router} />
-    </StrictMode>
+    </Provider>
 );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { verifyEmail } from "../../utlis/services.js";
+import { verifyEmail } from "../../utils/services.js";
 import axios from "axios";
 
 function SignUp() {
