@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { verifyEmail } from "../../utils/services.js";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { login } from "../../store/features/authSlice.js";
+import { useDispatch } from "react-redux";
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -12,6 +14,8 @@ function Login() {
     });
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     async function handleLogin(e) {
         e.preventDefault();
         if (formData.email === "") return setError("Please enter your email");
@@ -26,7 +30,10 @@ function Login() {
                 formData,
                 { withCredentials: true }
             );
-            if (data.success === true) return navigate("/");
+            if (data.success === true) {
+                dispatch(login(data?.data));
+                return navigate("/");
+            }
         } catch (error) {
             setError(
                 error?.response?.data?.message ||
