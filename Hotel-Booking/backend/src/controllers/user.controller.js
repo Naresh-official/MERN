@@ -51,11 +51,16 @@ export const loginUser = async (req, res) => {
         delete responseUser.password;
         delete responseUser.__v;
         const token = user.generateJwtToken();
-        res.cookie("token", token).status(200).json({
-            success: true,
-            message: "User logged in successfully",
-            data: responseUser,
-        });
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        })
+            .status(200)
+            .json({
+                success: true,
+                message: "User logged in successfully",
+                data: responseUser,
+            });
     } catch (error) {
         return res.status(500).json({
             success: false,
