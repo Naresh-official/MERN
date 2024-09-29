@@ -34,7 +34,8 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ["Male", "Female", "Other"],
+        enum: ["male", "female", "other"],
+        required: true,
     },
     post: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
