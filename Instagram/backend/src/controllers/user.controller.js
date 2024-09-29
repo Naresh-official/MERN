@@ -216,3 +216,44 @@ export const editUser = async (req, res) => {
             .json({ success: false, statusCode: 500, message: error.message });
     }
 };
+
+export const deleteUser = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const user = req.user;
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch)
+            return res.status(401).json({
+                success: false,
+                statusCode: 401,
+                message: "Invalid credentials",
+            });
+        await user.remove();
+        return res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "User deleted successfully",
+        });
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ success: false, statusCode: 500, message: error.message });
+    }
+};
+
+export const getSuggestedUsers = async (req, res) => {
+    try {
+        const users = await User.find({ _id: { $ne: req.user._id } }).limit(5);
+        // TODO: modify this to be dynamic
+        return res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "Suggested users fetched successfully",
+            data: { users },
+        });
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ success: false, statusCode: 500, message: error.message });
+    }
+};
