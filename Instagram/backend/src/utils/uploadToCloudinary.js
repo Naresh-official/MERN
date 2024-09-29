@@ -28,3 +28,16 @@ export default async function uploadToCloudinary(buffer) {
         return new Error("Failed to upload image to cloudinary : ", error);
     }
 }
+
+export const deleteFileFromCloudinary = async (url) => {
+    // Extract the public_id from the URL
+    const publicId = url.split("/").pop().split(".")[0];
+    try {
+        const result = await cloudinary.uploader.destroy(
+            `Instagram/${publicId}`
+        );
+        return result;
+    } catch (error) {
+        console.error("Error deleting file:", error);
+    }
+};

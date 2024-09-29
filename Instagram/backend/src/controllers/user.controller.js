@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
-import uploadToCloudinary from "../utils/uploadToCloudinary.js";
+import uploadToCloudinary, {
+    deleteFileFromCloudinary,
+} from "../utils/uploadToCloudinary.js";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
@@ -59,6 +61,7 @@ export const registerUser = async (req, res) => {
         return res.status(201).json({
             success: true,
             statusCode: 201,
+            message: "User created successfully",
             data: { user: responseUser },
         });
     } catch (error) {
@@ -108,6 +111,7 @@ export const loginUser = async (req, res) => {
             .json({
                 success: true,
                 statusCode: 200,
+                message: "Logged in successfully",
                 data: {
                     user: responseUser,
                 },
@@ -146,6 +150,64 @@ export const getUser = async (req, res) => {
         return res.status(200).json({
             success: true,
             statusCode: 200,
+            message: "User fetched successfully",
+            data: { user: responseUser },
+        });
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ success: false, statusCode: 500, message: error.message });
+    }
+};
+
+export const editUser = async (req, res) => {
+    try {
+        const { username, email, firstName, lastName, bio, gender } = req.body;
+        const profileImg = req?.file;
+        const user = req.user;
+        if (username) {
+            const existingUserByUsername = await User.findOne({ username });
+            if (existingUserByUsername)
+                return res.status(409).json({
+                    success: false,
+                    statusCode: 409,
+                    message: "User with this username already exists",
+                });
+            user.username = username || user.username;
+        }
+        if (email) {
+            const existingUserByEmail = await User.findOne({ email });
+            if (existingUserByEmail)
+                return res.status(409).json({
+                    success: false,
+                    statusCode: 409,
+                    message: "User with this email already exists",
+                });
+            user.email = email || user.email;
+        }
+
+        user.firstName =
+            firstName?.trim().length > 0 ? firstName : user.firstName;
+        user.lastName = lastName?.trim().length > 0 ? lastName : user.lastName;
+        user.bio = bio?.trim().length > 0 ? bio : user.bio;
+        user.gender = gender?.trim().length > 0 ? gender : user.gender;
+
+        if (profileImg) {
+            const buffer = Buffer.from(profileImg.buffer);
+            const url = await uploadToCloudinary(buffer);
+            await deleteFileFromCloudinary(user.profileImg);
+            user.profileImg = url;
+        }
+
+        await user.save();
+        const responseUser = user.toObject();
+        delete responseUser.password;
+        delete responseUser.__v;
+
+        return res.status(201).json({
+            success: true,
+            statusCode: 201,
+            message: "User updated successfully",
             data: { user: responseUser },
         });
     } catch (error) {
