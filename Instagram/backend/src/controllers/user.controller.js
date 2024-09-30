@@ -288,9 +288,37 @@ export const deleteUser = async (req, res) => {
 };
 
 export const getSuggestedUsers = async (req, res) => {
+    // TODO: test this in postman
     try {
-        const users = await User.find({ _id: { $ne: req.user._id } }).limit(5);
-        // TODO: modify this to be dynamic
+        const users = await User.aggregate([
+            {
+                $lookup: {
+                    from: "follows",
+                    localField: "_id",
+                    foreignField: "following",
+                    as: "isFollowedByCurrentUser",
+                },
+            },
+            {
+                $match: {
+                    _id: { $ne: new mongoose.Types.ObjectId(req.user._id) },
+                    "isFollowedByCurrentUser.followedBy": {
+                        $ne: new mongoose.Types.ObjectId(req.user._id),
+                    },
+                },
+            },
+            { $sample: { size: 6 } },
+            {
+                $project: {
+                    _id: 1,
+                    username: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    profileImg: 1,
+                    isFollowedByCurrentUser: 1,
+                },
+            },
+        ]);
         return res.status(200).json({
             success: true,
             statusCode: 200,
