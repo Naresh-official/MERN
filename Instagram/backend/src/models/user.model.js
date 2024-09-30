@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema({
         enum: ["male", "female", "other"],
         required: true,
     },
-    post: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
 });
 

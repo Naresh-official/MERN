@@ -166,6 +166,39 @@ export const getMyPosts = async (req, res) => {
     }
 };
 
+export const savePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const user = req.user;
+        if (!postId || !mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Invalid id",
+            });
+        }
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "Post not found",
+            });
+        }
+        user.saved.push(postId);
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "Post saved successfully",
+        });
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ success: false, statusCode: 500, message: error.message });
+    }
+};
+
 export const deletePost = async (req, res) => {
     try {
         const { postId } = req.params;
@@ -203,4 +236,4 @@ export const deletePost = async (req, res) => {
             .status(500)
             .json({ success: false, statusCode: 500, message: error.message });
     }
-}
+};
