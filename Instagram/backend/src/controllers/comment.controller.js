@@ -76,3 +76,27 @@ export const deleteComment = async (req, res) => {
             .json({ success: false, statusCode: 500, message: error.message });
     }
 };
+
+export const getCommentsOfPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        if (!postId || !mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Invalid id",
+            });
+        }
+        const comments = await Comment.find({ post: postId });
+        return res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "Comments fetched successfully",
+            data: { comments },
+        });
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ success: false, statusCode: 500, message: error.message });
+    }
+};

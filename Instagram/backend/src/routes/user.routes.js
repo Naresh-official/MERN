@@ -18,7 +18,7 @@ router.post("/login", loginUser);
 router.get("/logout", verifyToken, logoutUser);
 router.get("/me", verifyToken, getUser);
 router.post("/edit", verifyToken, upload.single("profileImg"), editUser);
-router.get("/delete", verifyToken, deleteUser);
+router.delete("/delete", verifyToken, deleteUser);
 router.get("/suggested", verifyToken, getSuggestedUsers);
 
 export default router;

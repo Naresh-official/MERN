@@ -11,6 +11,6 @@ const router = Router();
 router.post("/create", upload.single("image"), createPost);
 router.get("/getall", getAllPosts);
 router.get("/getmyposts", getMyPosts);
-router.post("/delete/:postId", deletePost);
+router.delete("/delete/:postId", deletePost);
 
 export default router;
