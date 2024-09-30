@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    deleteUser,
     editUser,
     getUser,
     loginUser,
@@ -15,6 +16,7 @@ router.post("/register", upload.single("profileImg"), registerUser);
 router.post("/login", loginUser);
 router.get("/logout", verifyToken, logoutUser);
 router.get("/me", verifyToken, getUser);
-router.post("/edit",verifyToken, upload.single("profileImg"), editUser);
+router.post("/edit", verifyToken, upload.single("profileImg"), editUser);
+router.get("/delete/", verifyToken, deleteUser);
 
 export default router;

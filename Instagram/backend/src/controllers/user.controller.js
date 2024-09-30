@@ -1,4 +1,8 @@
+import Follow from "../models/follow.model.js";
+import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
+import Like from "../models/like.model.js";
+import Comment from "../models/comment.model.js";
 import uploadToCloudinary, {
     deleteFileFromCloudinary,
 } from "../utils/uploadToCloudinary.js";
@@ -220,7 +224,14 @@ export const editUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
     try {
         const { password } = req.body;
-        const user = req.user;
+        if (!password)
+            return res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Password is required",
+            });
+        const userId = req.user._id;
+        const user = await User.findById(userId).select("+password");
         const isMatch = await user.comparePassword(password);
         if (!isMatch)
             return res.status(401).json({
@@ -228,7 +239,42 @@ export const deleteUser = async (req, res) => {
                 statusCode: 401,
                 message: "Invalid credentials",
             });
-        await user.remove();
+
+        // deleting all posts of the user
+        const posts = await Post.find({ owner: userId });
+        posts.forEach(async (post) => {
+            await deleteFileFromCloudinary(post.image);
+            await post.deleteOne();
+        });
+
+        // deleting all comments of the user and user posts
+        const comments = await Comment.find({
+            $or: [{ commentedBy: userId }, { post: { $in: posts } }],
+        });
+        comments.forEach(async (comment) => {
+            await comment.deleteOne();
+        });
+
+        // deleting all follow of the user
+        const follows = await Follow.find({
+            $or: [{ followedBy: userId }, { followedTo: userId }],
+        });
+        follows.forEach(async (follow) => {
+            await follow.deleteOne();
+        });
+
+        // deleting all likes of the user
+        const likes = await Like.find({
+            $or: [{ user: userId }, { post: { $in: posts } }],
+        });
+        likes.forEach(async (like) => {
+            await like.deleteOne();
+        });
+
+        // TODO: delete conversations and messages of the user
+        // TODO: delete notifications of the user
+
+        await user.deleteOne();
         return res.status(200).json({
             success: true,
             statusCode: 200,
