@@ -20,10 +20,6 @@ app.use(
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-});
-
 // Routes
 import userRoutes from "./routes/user.routes.js";
 import followRoutes from "./routes/follow.routes.js";
@@ -40,5 +36,9 @@ app.use("/api/v1/post", verifyToken, postRoutes);
 app.use("/api/v1/like", verifyToken, likeRoutes);
 app.use("/api/v1/comment", verifyToken, commentRoutes);
 app.use("/api/v1/message", verifyToken, messageRoutes);
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+});
 
 export default app;

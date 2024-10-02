@@ -21,5 +21,9 @@ node_modules
 *.sln
 *.sw?
 
+# Build directories and files
+build
+dist
+
 .env
 .env.local
