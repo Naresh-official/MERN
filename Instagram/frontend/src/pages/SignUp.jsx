@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button.jsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
     Select,
@@ -12,6 +12,7 @@ import { validateEmail } from "@/lib/services.js";
 import axios from "axios";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast.js";
+import { useSelector } from "react-redux";
 
 function SignUp() {
     const [formData, setFormData] = useState({
@@ -67,12 +68,27 @@ function SignUp() {
         }
     };
 
+    const { theme } = useSelector((state) => state.theme);
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    }, [theme]);
+
     return (
         <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
-            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 rounded-lg shadow-lg">
                 <div>
                     <img
-                        src="https://logos-world.net/wp-content/uploads/2020/05/Instagram-Logo-2016-present.png"
+                        src={`${
+                            theme === "light"
+                                ? "/logo-light.png"
+                                : "/logo-dark.png"
+                        }`}
                         alt="Instagram"
                         className="w-52 mx-auto"
                     />
@@ -93,7 +109,7 @@ function SignUp() {
                                     email: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="password"
@@ -105,7 +121,7 @@ function SignUp() {
                                     password: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="text"
@@ -117,7 +133,7 @@ function SignUp() {
                                     firstName: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="text"
@@ -129,7 +145,7 @@ function SignUp() {
                                     lastName: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="text"
@@ -141,7 +157,7 @@ function SignUp() {
                                     username: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <Select
                             className="bg-transparent"
@@ -151,7 +167,7 @@ function SignUp() {
                             }
                         >
                             <SelectTrigger
-                                className={`w-[180px] bg-transparent border-2 border-gray-300 ${
+                                className={`w-[180px] bg-transparent border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 ${
                                     formData.gender === ""
                                         ? "text-zinc-400"
                                         : "text-zinc-900"
@@ -159,7 +175,7 @@ function SignUp() {
                             >
                                 <SelectValue placeholder="Theme" />
                             </SelectTrigger>
-                            <SelectContent className="w-[180px] bg-zinc-50 border-2 border-gray-300 text-zinc-500">
+                            <SelectContent className="w-[180px] bg-zinc-50 border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 text-zinc-500">
                                 <SelectItem value="male">Male</SelectItem>
                                 <SelectItem value="female">Female</SelectItem>
                                 <SelectItem value="other">Other</SelectItem>
@@ -167,16 +183,13 @@ function SignUp() {
                         </Select>
 
                         {error && <p className="text-red-500">{error}</p>}
-                        <Button
-                            type="submit"
-                            className="w-full bg-sky-500 hover:bg-sky-600"
-                        >
+                        <Button className="w-full bg-sky-500 dark:bg-sky-700 hover:bg-sky-600 dark:hover:bg-sky-800 dark:text-neutral-50">
                             Sign up
                         </Button>
                     </form>
                 </div>
             </div>
-            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 rounded-lg shadow-lg">
                 <p className="text-center">
                     Already have an account?{" "}
                     <Link

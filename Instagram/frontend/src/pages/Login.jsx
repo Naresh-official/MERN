@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button.jsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast.js";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 function Login() {
     const navigate = useNavigate();
@@ -14,7 +15,16 @@ function Login() {
         password: "",
     });
     const [error, setError] = useState(null);
-
+    const { theme } = useSelector((state) => state.theme);
+    useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    }, [theme]);
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -34,7 +44,7 @@ function Login() {
                     description: "Redirecting to home page",
                     variant: "success",
                 });
-                return navigate("/");
+                navigate("/");
             }
         } catch (error) {
             setError(
@@ -47,10 +57,14 @@ function Login() {
 
     return (
         <div className="w-full h-screen flex flex-col gap-4 justify-center items-center">
-            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 rounded-lg shadow-lg">
                 <div>
                     <img
-                        src="https://logos-world.net/wp-content/uploads/2020/05/Instagram-Logo-2016-present.png"
+                        src={`${
+                            theme === "light"
+                                ? "/logo-light.png"
+                                : "/logo-dark.png"
+                        }`}
                         alt="Instagram"
                         className="w-52 mx-auto"
                     />
@@ -71,7 +85,7 @@ function Login() {
                                     emailOrUsername: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="password"
@@ -83,18 +97,18 @@ function Login() {
                                     password: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="border-2 border-gray-300 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         {error && (
                             <p className="text-red-500 text-sm">{error}</p>
                         )}
-                        <Button className="w-full bg-sky-500 hover:bg-sky-600">
+                        <Button className="w-full bg-sky-500 dark:bg-sky-700 hover:bg-sky-600 dark:hover:bg-sky-800 dark:text-neutral-50">
                             Log in
                         </Button>
                     </form>
                 </div>
             </div>
-            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+            <div className="md:w-[400px] w-[350px] p-4 border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700  rounded-lg shadow-lg">
                 <p className="text-center">
                     Don't have an account?{" "}
                     <Link
