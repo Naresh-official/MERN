@@ -25,7 +25,7 @@ export const createPost = async (req, res) => {
             owner: user._id,
         });
         const optimizedImageBuffer = await sharp(image.buffer)
-            .resize({ width: 600, height: 600, fit: "cover" })
+            .resize({ width: 600, height: 900, fit: "cover" })
             .toBuffer();
         const url = await uploadToCloudinary(optimizedImageBuffer);
         newPost.image = url;
