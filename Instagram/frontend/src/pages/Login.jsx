@@ -1,14 +1,20 @@
 import { Button } from "@/components/ui/button.jsx";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast.js";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/store/features/authSlice.js";
 
 function Login() {
     const navigate = useNavigate();
     const { toast } = useToast();
+    const dispatch = useDispatch();
+    const { isLoggedIn } = useSelector((state) => state.auth);
+    if (isLoggedIn) {
+        return <Navigate to="/" />;
+    }
 
     const [formData, setFormData] = useState({
         emailOrUsername: "",
@@ -25,6 +31,7 @@ function Login() {
             localStorage.setItem("theme", "light");
         }
     }, [theme]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -44,6 +51,9 @@ function Login() {
                     description: "Redirecting to home page",
                     variant: "success",
                 });
+                dispatch(login(data.data.user));
+                console.log(data.data.user);
+                localStorage.setItem("user", JSON.stringify(data.data.user));
                 navigate("/");
             }
         } catch (error) {

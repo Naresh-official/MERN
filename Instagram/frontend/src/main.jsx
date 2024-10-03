@@ -7,12 +7,22 @@ import Layout from "./layouts/Layout.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Home from "./pages/Home.jsx";
+import Create from "./pages/Create.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
         children: [
+            {
+                path: "",
+                element: <Home />,
+            },
+            {
+                path: "create",
+                element: <Create />,
+            },
             {
                 path: "*",
                 element: <NotFound />,

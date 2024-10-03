@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { setTheme } from "@/store/features/themeSlice.js";
 
 import { GoHome } from "react-icons/go";
@@ -9,6 +9,7 @@ import { RiMessengerLine } from "react-icons/ri";
 import { FaRegBookmark, FaRegHeart } from "react-icons/fa";
 import { RiAddBoxLine } from "react-icons/ri";
 import { BsBrightnessHigh } from "react-icons/bs";
+import { logout } from "@/store/features/authSlice.js";
 
 import {
     DropdownMenu,
@@ -74,6 +75,8 @@ function Sidebar() {
                 { withCredentials: true }
             );
             if (data.success) {
+                dispatch(logout());
+                localStorage.removeItem("user");
                 navigate("/login");
             }
         } catch (error) {
@@ -91,7 +94,7 @@ function Sidebar() {
     };
 
     return (
-        <div className="border-r-2 border-netral-500 dark:border-neutral-800 flex flex-col gap-4 p-2 lg:pr-10 items-start justify-between py-6">
+        <div className="border-r-2 border-netral-500 dark:border-neutral-800 flex flex-col gap-4 p-2 lg:pr-10 items-start justify-between py-6 ">
             <div>
                 <img
                     src={`${
@@ -106,15 +109,19 @@ function Sidebar() {
                             key={item.name}
                             className="p-2 rounded-lg cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800"
                         >
-                            <Link
+                            <NavLink
                                 to={item.link}
-                                className="flex items-center gap-3 "
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "text-blue-500 font-medium flex items-center gap-3"
+                                        : "flex items-center gap-3 "
+                                }
                             >
                                 <item.icon className="w-6 h-6" />
                                 <span className="hidden lg:block">
                                     {item.name}
                                 </span>
-                            </Link>
+                            </NavLink>
                         </li>
                     ))}
                 </ul>
