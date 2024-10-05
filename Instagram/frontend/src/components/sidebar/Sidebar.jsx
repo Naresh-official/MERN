@@ -78,12 +78,14 @@ function Sidebar() {
                 dispatch(logout());
                 localStorage.removeItem("user");
                 navigate("/login");
+                return;
             }
         } catch (error) {
             console.log(error);
         }
     };
     const { theme } = useSelector((state) => state.theme);
+    const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const toggleTheme = () => {
         if (theme === "light") {
@@ -113,7 +115,7 @@ function Sidebar() {
                                 to={item.link}
                                 className={({ isActive }) =>
                                     isActive
-                                        ? "text-blue-500 font-medium flex items-center gap-3"
+                                        ? "text-violet-500 font-medium flex items-center gap-3"
                                         : "flex items-center gap-3 "
                                 }
                             >
@@ -124,6 +126,23 @@ function Sidebar() {
                             </NavLink>
                         </li>
                     ))}
+                    <li className="p-2 rounded-lg cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800">
+                        <NavLink
+                            to="/profile"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "text-violet-500 font-medium flex items-center gap-3"
+                                    : "flex items-center gap-3 "
+                            }
+                        >
+                            <img
+                                src={user?.profileImg}
+                                alt="profile"
+                                className="w-6 h-6 rounded-full"
+                            />
+                            <span className="hidden lg:block">Profile</span>
+                        </NavLink>
+                    </li>
                 </ul>
             </div>
             <div>

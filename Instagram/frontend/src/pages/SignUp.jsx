@@ -31,20 +31,26 @@ function SignUp() {
         e.preventDefault();
         try {
             if (formData.email === "") return setError("Please enter an email");
-            else if (!validateEmail(formData.email))
-                return setError("Please enter a valid email");
-            else if (formData.password === "")
-                return setError("Please enter a password");
-            else if (formData.firstName === "")
-                return setError("Please enter your first name");
-            else if (formData.lastName === "")
-                return setError("Please enter your last name");
-            else if (formData.username === "")
-                return setError("Please enter a username");
-            else if (formData.gender === "")
-                return setError("Please select your gender");
+            else if (!validateEmail(formData.email)) {
+                setError("Please enter a valid email");
+                return;
+            } else if (formData.password === "") {
+                setError("Please enter a password");
+                return;
+            } else if (formData.firstName === "") {
+                setError("Please enter your first name");
+                return;
+            } else if (formData.lastName === "") {
+                setError("Please enter your last name");
+                return;
+            } else if (formData.username === "") {
+                setError("Please enter a username");
+                return;
+            } else if (formData.gender === "") {
+                setError("Please select your gender");
+                return;
+            }
             setError(null);
-            console.log(import.meta.env.VITE_BASE_URL);
 
             const { data } = await axios.post(
                 `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/register`,
@@ -59,7 +65,6 @@ function SignUp() {
                 return navigate("/login");
             }
         } catch (error) {
-            console.log(error);
             setError(
                 error?.response?.data?.message ||
                     error?.message ||

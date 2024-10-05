@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button.jsx";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast.js";
@@ -12,9 +12,6 @@ function Login() {
     const { toast } = useToast();
     const dispatch = useDispatch();
     const { isLoggedIn } = useSelector((state) => state.auth);
-    if (isLoggedIn) {
-        return <Navigate to="/" />;
-    }
 
     const [formData, setFormData] = useState({
         emailOrUsername: "",
@@ -22,6 +19,14 @@ function Login() {
     });
     const [error, setError] = useState(null);
     const { theme } = useSelector((state) => state.theme);
+    const usernameOrEmailRef = useRef(null);
+
+    useEffect(() => {
+        if (usernameOrEmailRef.current) {
+            usernameOrEmailRef.current.focus();
+        }
+    }, []);
+
     useEffect(() => {
         if (theme === "dark") {
             document.documentElement.classList.add("dark");
@@ -32,13 +37,23 @@ function Login() {
         }
     }, [theme]);
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/");
+            return;
+        }
+    }, [isLoggedIn, navigate]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            if (formData.emailOrUsername === "")
-                return setError("Please enter an email or username");
-            else if (formData.password === "")
-                return setError("Please enter a password");
+            if (formData.emailOrUsername === "") {
+                setError("Please enter an email or username");
+                return;
+            } else if (formData.password === "") {
+                setError("Please enter a password");
+                return;
+            }
             setError(null);
             const { data } = await axios.post(
                 `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/login`,
@@ -52,9 +67,9 @@ function Login() {
                     variant: "success",
                 });
                 dispatch(login(data.data.user));
-                console.log(data.data.user);
                 localStorage.setItem("user", JSON.stringify(data.data.user));
                 navigate("/");
+                return;
             }
         } catch (error) {
             setError(
@@ -87,6 +102,7 @@ function Login() {
                     >
                         <input
                             type="text"
+                            ref={usernameOrEmailRef}
                             placeholder="Username or email"
                             value={formData.emailOrUsername}
                             onChange={(e) =>

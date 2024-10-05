@@ -1,6 +1,8 @@
 import sharp from "sharp";
 import Post from "../models/post.model.js";
-import uploadToCloudinary from "../utils/uploadToCloudinary.js";
+import uploadToCloudinary, {
+    deleteFileFromCloudinary,
+} from "../utils/uploadToCloudinary.js";
 import mongoose from "mongoose";
 
 export const createPost = async (req, res) => {
@@ -25,7 +27,7 @@ export const createPost = async (req, res) => {
             owner: user._id,
         });
         const optimizedImageBuffer = await sharp(image.buffer)
-            .resize({ width: 600, height: 900, fit: "cover" })
+            .resize({ width: 600, height: 750, fit: "cover" })
             .toBuffer();
         const url = await uploadToCloudinary(optimizedImageBuffer);
         newPost.image = url;
@@ -225,6 +227,7 @@ export const deletePost = async (req, res) => {
                 message: "You are not authorized to delete this post",
             });
         }
+        await deleteFileFromCloudinary(post.image);
         await Post.findByIdAndDelete(postId);
         return res.status(200).json({
             success: true,
