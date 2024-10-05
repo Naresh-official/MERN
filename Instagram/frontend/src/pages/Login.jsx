@@ -55,6 +55,10 @@ function Login() {
                 return;
             }
             setError(null);
+            setFormData({
+                ...formData,
+                emailOrUsername: formData.emailOrUsername.trim().toLowerCase(),
+            });
             const { data } = await axios.post(
                 `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/login`,
                 formData,
@@ -111,7 +115,7 @@ function Login() {
                                     emailOrUsername: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="lowercase border-2 border-gray-300 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="password"

@@ -51,6 +51,11 @@ function SignUp() {
                 return;
             }
             setError(null);
+            setFormData({
+                ...formData,
+                email: formData.email.trim().toLowerCase(),
+                username: formData.username.trim().toLowerCase(),
+            });
 
             const { data } = await axios.post(
                 `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/register`,
@@ -114,7 +119,7 @@ function SignUp() {
                                     email: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="lowercase border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <input
                             type="password"
@@ -162,7 +167,7 @@ function SignUp() {
                                     username: e.target.value,
                                 })
                             }
-                            className="border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
+                            className="lowercase border-2 border-gray-300 dark:bg-neutral-950 dark:border-neutral-700 bg-transparent p-2 w-full rounded-lg outline-none"
                         />
                         <Select
                             className="bg-transparent"
