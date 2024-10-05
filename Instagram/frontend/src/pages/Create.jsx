@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast.js";
 import { useNavigate } from "react-router-dom";
 
-// TODO : toast not working
+// TODO : loading state and progress bar
 
 function Create() {
     const { toast } = useToast();
@@ -40,7 +40,6 @@ function Create() {
                 toast({
                     title: "Post created successfully",
                     description: "Redirecting to home page",
-                    variant: "success",
                 });
                 return navigate("/");
             }

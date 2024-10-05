@@ -31,8 +31,17 @@ function Layout() {
                     `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/me`,
                     { withCredentials: true }
                 );
-                if (data?.data?.success) {
+                if (
+                    data?.success &&
+                    localStorage.getItem("user") !==
+                        JSON.stringify(data.data.user)
+                ) {
                     dispatch(login(data.data.user));
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(data.data.user)
+                    );
+                    return;
                 }
             } catch (error) {
                 if (error?.response?.status === 401) {
@@ -43,13 +52,13 @@ function Layout() {
             }
         };
         checkAuth();
-    }, []);
+    }, [dispatch, navigate]);
     if (!isLoggedIn) {
         return <Navigate to="/login" />;
     }
     return (
         <div className={`flex h-screen w-screen`}>
-            <Sidebar className="" />
+            <Sidebar />
             <div className="w-full overflow-y-auto">
                 <Outlet />
             </div>
