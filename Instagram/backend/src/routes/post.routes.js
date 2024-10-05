@@ -13,6 +13,6 @@ router.post("/create", upload.single("image"), createPost);
 router.get("/getall", getAllPosts);
 router.get("/getmyposts", getMyPosts);
 router.delete("/delete/:postId", deletePost);
-router.get("/save/:postId", savePost);
+router.patch("/save/:postId", savePost);
 
 export default router;

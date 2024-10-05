@@ -92,6 +92,7 @@ export const getAllPosts = async (req, res) => {
                     commentsCount: 1,
                     isLiked: 1,
                     owner: 1,
+                    createdAt: 1,
                 },
             },
         ]);
@@ -191,6 +192,15 @@ export const savePost = async (req, res) => {
                 success: false,
                 statusCode: 404,
                 message: "Post not found",
+            });
+        }
+        if (user.saved.includes(postId)) {
+            user.saved.pull(postId);
+            await user.save();
+            return res.status(200).json({
+                success: true,
+                statusCode: 200,
+                message: "Post unsaved successfully",
             });
         }
         user.saved.push(postId);
