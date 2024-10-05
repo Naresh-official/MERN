@@ -91,9 +91,15 @@ export const getAllPosts = async (req, res) => {
                     likesCount: 1,
                     commentsCount: 1,
                     isLiked: 1,
+                    owner: 1,
                 },
             },
         ]);
+
+        await Post.populate(posts, {
+            path: "owner",
+            select: { username: 1, profileImg: 1, firstName: 1 },
+        });
 
         return res.status(200).json({
             success: true,
