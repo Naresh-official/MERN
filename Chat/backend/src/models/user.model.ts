@@ -1,4 +1,6 @@
 import mongoose, { Document } from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export interface IUser extends Document {
     name: string;
@@ -35,6 +37,26 @@ const userSchema = new mongoose.Schema<IUser>({
         },
     },
 });
+
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
+    next();
+});
+
+userSchema.methods.matchPassword = async function (enteredPassword: string) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+userSchema.methods.generateJWT = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET!, {
+        expiresIn: process.env.JWT_EXPIRE || "1d",
+    });
+};
 
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
