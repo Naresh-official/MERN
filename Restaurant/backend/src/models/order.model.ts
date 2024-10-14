@@ -5,7 +5,7 @@ export interface IOrder extends Document {
     restaurant: mongoose.Types.ObjectId;
     items: IOrderItem[];
     total: number;
-    status: string;
+    status: "pending" | "confirmed" | "delivered" | "cancelled";
     createdAt: Date;
     updatedAt: Date;
 }
@@ -51,7 +51,7 @@ const orderSchema = new Schema<IOrder>(
         },
         status: {
             type: String,
-            enum: ["pending", "delivered", "cancelled"],
+            enum: ["pending", "confirmed", "delivered", "cancelled"],
             default: "pending",
         },
     },
