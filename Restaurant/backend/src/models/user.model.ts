@@ -20,6 +20,10 @@ export interface IUser extends Document {
     verfiyCodeExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
+    comparePassword(enteredPassword: string): Promise<boolean>;
+    generateVerifyCode(): string;
+    compareVerifyCode(enteredCode: string): boolean;
+    generateAccessToken(): string;
 }
 
 const userSchema: Schema<IUser> = new Schema(
@@ -36,6 +40,7 @@ const userSchema: Schema<IUser> = new Schema(
         password: {
             type: String,
             required: true,
+            select: false,
         },
         contact: {
             type: Number,
@@ -119,7 +124,7 @@ userSchema.methods.compareVerifyCode = function (enteredCode: string) {
 
 userSchema.methods.generateAccessToken = function () {
     return jwt.sign({ _id: this._id }, process.env.JWT_SECRET!, {
-        expiresIn: process.env.JWT_SECRET_EXPIRY!,
+        expiresIn: 1000 * 60 * 60 * 24, // 1 day
     });
 };
 
