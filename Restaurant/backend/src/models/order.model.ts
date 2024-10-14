@@ -41,7 +41,7 @@ const orderSchema = new Schema<IOrder>(
                 },
                 quantity: {
                     type: Number,
-                    required: true,
+                    default: 1,
                 },
             },
         ],
