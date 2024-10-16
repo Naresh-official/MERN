@@ -70,12 +70,12 @@ export const getRestaurants = async (
 };
 
 export const getRestaurantById = async (
-    res: Response,
-    req: Request
+    req: Request,
+    res: Response
 ): Promise<void> => {
     try {
         const { id } = req.params;
-        if (!id || mongoose.Types.ObjectId.isValid(id)) {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             res.status(400).json({
                 success: false,
                 statusCode: 400,
@@ -83,7 +83,7 @@ export const getRestaurantById = async (
             });
             return;
         }
-        const restaurant: IRestaurant | null = await Restaurant.aggregate([
+        const restaurants: IRestaurant[] = await Restaurant.aggregate([
             {
                 $match: {
                     _id: new mongoose.Types.ObjectId(id),
@@ -108,12 +108,20 @@ export const getRestaurantById = async (
                     menuItems: 1,
                 },
             },
-        ])[0];
+        ]);
+        if (restaurants.length === 0) {
+            res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "Restaurant not found",
+            });
+            return;
+        }
         res.status(200).json({
             success: true,
             statusCode: 200,
             message: "Restaurant fetched successfully",
-            data: restaurant,
+            data: restaurants[0],
         });
     } catch (error: any) {
         res.status(500).json({
@@ -125,8 +133,8 @@ export const getRestaurantById = async (
 };
 
 export const deleteRestaurant = async (
-    res: Response,
-    req: Request
+    req: Request,
+    res: Response
 ): Promise<void> => {
     try {
         const { id } = req.params;

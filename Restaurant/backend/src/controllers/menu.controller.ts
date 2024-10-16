@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import MenuItem, { IMenuItem } from "../models/menuItem.model";
+import MenuItem, { IMenuItem } from "../models/menuItem.model.js";
 import mongoose from "mongoose";
 
 export const addMenuItem = async (
@@ -7,24 +7,27 @@ export const addMenuItem = async (
     res: Response
 ): Promise<void> => {
     try {
-        const {
-            restaurant: restaurantId,
-            name,
-            price,
-            description,
-            image,
-        } = req.body as Pick<
-            IMenuItem,
-            | "name"
-            | "restaurant"
-            | "price"
-            | "description"
-            | "image"
-            | "restaurant"
-        >;
+        const { restaurant, name, price, description, image } =
+            req.body as Pick<
+                IMenuItem,
+                | "name"
+                | "restaurant"
+                | "price"
+                | "description"
+                | "image"
+                | "restaurant"
+            >;
+        if (!restaurant || !mongoose.Types.ObjectId.isValid(restaurant)) {
+            res.status(400).json({
+                success: false,
+                statusCode: 400,
+                message: "Invalid restaurant id",
+            });
+            return;
+        }
         const newMenuItem: IMenuItem | null = new MenuItem({
             name,
-            restaurant: restaurantId,
+            restaurant,
             price,
             description,
             image,
@@ -41,7 +44,7 @@ export const addMenuItem = async (
         res.status(500).json({
             success: false,
             statusCode: 500,
-            message: error.message,
+            message: error,
         });
     }
 };
@@ -81,12 +84,12 @@ export const getMenuItems = async (
 };
 
 export const deleteMenuItem = async (
-    res: Response,
-    req: Request
+    req: Request,
+    res: Response
 ): Promise<void> => {
     try {
         const { id } = req.params;
-        if (!id || mongoose.Types.ObjectId.isValid(id)) {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             res.status(400).json({
                 success: false,
                 statusCode: 400,
@@ -110,12 +113,12 @@ export const deleteMenuItem = async (
 };
 
 export const getMenuItemById = async (
-    res: Response,
-    req: Request
+    req: Request,
+    res: Response
 ): Promise<void> => {
     try {
         const { id } = req.params;
-        if (!id || mongoose.Types.ObjectId.isValid(id)) {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             res.status(400).json({
                 success: false,
                 statusCode: 400,
@@ -123,7 +126,7 @@ export const getMenuItemById = async (
             });
             return;
         }
-        const menuItem: IMenuItem | null = await MenuItem.aggregate([
+        const menuItems: IMenuItem[] | null = await MenuItem.aggregate([
             {
                 $match: {
                     _id: new mongoose.Types.ObjectId(id),
@@ -150,12 +153,20 @@ export const getMenuItemById = async (
                     },
                 },
             },
-        ])[0];
+        ]);
+        if (menuItems?.length === 0) {
+            res.status(404).json({
+                success: false,
+                statusCode: 404,
+                message: "MenuItem not found",
+            });
+            return;
+        }
         res.status(200).json({
             success: true,
             statusCode: 200,
             message: "MenuItem fetched successfully",
-            data: menuItem,
+            data: menuItems[0],
         });
     } catch (error: any) {
         res.status(500).json({
@@ -165,4 +176,3 @@ export const getMenuItemById = async (
         });
     }
 };
-

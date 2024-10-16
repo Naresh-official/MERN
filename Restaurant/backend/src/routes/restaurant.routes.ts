@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    getRestaurants,
     deleteRestaurant,
     getRestaurantById,
     registerRestaurant,
@@ -11,7 +12,7 @@ const router = Router();
 
 router.post("/register", verifyJWT, verifyAdmin, registerRestaurant);
 router.delete("/:id", verifyJWT, verifyAdmin, deleteRestaurant);
+router.get("/all", getRestaurants);
 router.get("/:id", getRestaurantById);
-router.get("/all", getRestaurantById);
 
 export default router;
