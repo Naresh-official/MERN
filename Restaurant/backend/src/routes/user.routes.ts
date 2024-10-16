@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    checkUserwithEmail,
     deleteAccount,
     login,
     logout,
@@ -15,5 +16,6 @@ router.post("/login", login);
 router.get("/logout", logout);
 router.patch("/verify", verifyEmail);
 router.delete("/delete", verifyJWT, deleteAccount);
+router.get("/check/:email", checkUserwithEmail);
 
 export default router;

@@ -197,7 +197,10 @@ export const verifyEmail = async (
     });
 };
 
-export const deleteAccount = async (req: Request, res: Response) => {
+export const deleteAccount = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     try {
         const { user } = req;
         if (!user) {
@@ -213,6 +216,69 @@ export const deleteAccount = async (req: Request, res: Response) => {
             success: true,
             statusCode: 200,
             message: "Account deleted successfully",
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: error.message,
+        });
+    }
+};
+
+export const checkUserwithEmail = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    try {
+        const { email } = req.params;
+        const user: IUser | null = await User.findOne({ email });
+        if (!user) {
+            res.status(200).json({
+                success: true,
+                statusCode: 200,
+                message: "User not found",
+                data: {
+                    found: false,
+                },
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                statusCode: 200,
+                message: "User found",
+                data: {
+                    found: true,
+                },
+            });
+        }
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            statusCode: 500,
+            message: error.message,
+        });
+    }
+};
+
+export const getUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { user } = req;
+        if (!user) {
+            res.status(401).json({
+                success: false,
+                statusCode: 401,
+                message: "Unauthorized",
+            });
+            return;
+        }
+        const displayUser: Partial<typeof user> = user.toObject();
+        delete displayUser.__v;
+        res.status(200).json({
+            success: true,
+            statusCode: 200,
+            message: "User found",
+            data: displayUser,
         });
     } catch (error: any) {
         res.status(500).json({
