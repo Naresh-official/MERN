@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2020", // Specify ECMAScript target version
+        "module": "ESNext", // Specify module code generation
+        "lib": ["ES2020", "DOM"], // Specify library files to be included
+        "outDir": "./dist", // Redirect output structure to the dist directory
+        "rootDir": "./src", // Specify the root directory of input files
+        "strict": true, // Enable all strict type-checking options
+        "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
+        "skipLibCheck": true, // Skip type checking of declaration files
+        "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
+        "moduleResolution": "node", // Use Node.js module resolution strategy
+        "resolveJsonModule": true, // Allow importing .json files
+        "noImplicitAny": false, // Raise error on expressions and declarations with an implied 'any' type
+        "baseUrl": "./src", // Base directory to resolve non-relative module names
+        "typeRoots": ["./node_modules/@types", "./src/@types"], // List of folders that contain type definitions
+        "types": ["node", "express", "jsonwebtoken"] // List of type definitions to include
+    },
+    "include": ["src/**/*"], // Specify files or directories to be included
+    "exclude": ["node_modules", "dist"] // Specify files or directories to be excluded
+}
