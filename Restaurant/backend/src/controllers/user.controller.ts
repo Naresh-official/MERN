@@ -196,24 +196,3 @@ export const verifyEmail = async (
         message: "Email verified successfully",
     });
 };
-
-export const deleteAccount = async (
-    req: Request,
-    res: Response
-): Promise<void> => {
-    try {
-        const { user } = req;
-        await user?.deleteOne();
-        res.status(200).json({
-            success: true,
-            statusCode: 200,
-            message: "Account deleted successfully",
-        });
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            statusCode: 500,
-            message: error.message,
-        });
-    }
-};
