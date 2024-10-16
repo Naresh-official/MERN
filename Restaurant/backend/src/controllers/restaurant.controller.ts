@@ -83,9 +83,32 @@ export const getRestaurantById = async (
             });
             return;
         }
-        const restaurant: IRestaurant | null = await Restaurant.findById(
-            id
-        ).populate("menuItems");
+        const restaurant: IRestaurant | null = await Restaurant.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(id),
+                },
+            },
+            {
+                $lookup: {
+                    from: "menuitems",
+                    localField: "_id",
+                    foreignField: "restaurant",
+                    as: "menuItems",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    address: 1,
+                    city: 1,
+                    state: 1,
+                    contact: 1,
+                    menuItems: 1,
+                },
+            },
+        ])[0];
         res.status(200).json({
             success: true,
             statusCode: 200,
