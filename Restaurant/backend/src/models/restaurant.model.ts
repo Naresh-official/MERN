@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IRestaurant extends Document {
-    owner: mongoose.Types.ObjectId;
     name: string;
     address: string;
     city: string;
@@ -15,11 +14,6 @@ export interface IRestaurant extends Document {
 
 const RestaurantSchema = new Schema<IRestaurant>(
     {
-        owner: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
         name: {
             type: String,
             required: true,
