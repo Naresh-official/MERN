@@ -24,7 +24,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
             });
             return;
         }
-        const newUser: IUser | null = await User.create({
+        const newUser: IUser | null = new User({
             fullName,
             email,
             password,
@@ -35,6 +35,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
             profilePic,
             role,
         });
+        // TODO: upload profile pic
         if (!newUser) {
             res.status(500).json({
                 success: false,

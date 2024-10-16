@@ -44,7 +44,6 @@ const RestaurantSchema = new Schema<IRestaurant>(
             {
                 type: Schema.Types.ObjectId,
                 ref: "MenuItem",
-                required: true,
             },
         ],
         images: [

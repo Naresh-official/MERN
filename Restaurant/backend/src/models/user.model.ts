@@ -12,7 +12,7 @@ export interface IUser extends Document {
     state: string;
     profilePic?: string;
     lastLogin: Date;
-    role: string;
+    role: "admin" | "user";
     isVerified?: boolean;
     resetPasswordToken?: string;
     resetPasswordExpires?: Date;
