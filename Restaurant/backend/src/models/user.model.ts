@@ -16,10 +16,11 @@ export interface IUser extends Document {
     isVerified?: boolean;
     resetPasswordToken?: string;
     resetPasswordExpires?: Date;
-    verifiyCode?: string;
-    verfiyCodeExpires?: Date;
+    verifyCode?: string;
+    verifyCodeExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
+    __v?: number;
     comparePassword(enteredPassword: string): Promise<boolean>;
     generateVerifyCode(): string;
     compareVerifyCode(enteredCode: string): boolean;
@@ -80,11 +81,13 @@ const userSchema: Schema<IUser> = new Schema(
         resetPasswordExpires: {
             type: Date,
         },
-        verifiyCode: {
+        verifyCode: {
             type: String,
+            select: false,
         },
-        verfiyCodeExpires: {
+        verifyCodeExpires: {
             type: Date,
+            default: Date.now(),
         },
     },
     { timestamps: true }
@@ -105,16 +108,15 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
 };
 
 userSchema.methods.generateVerifyCode = function () {
-    const characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let code = "";
     for (let i = 0; i < 6; i++) {
         code += characters.charAt(
             Math.floor(Math.random() * characters.length)
         );
     }
-    this.verifiyCode = code;
-    this.verfiyCodeExpires = Date.now() + 60 * 60 * 1000; // 1 hour
+    this.verifyCode = code;
+    this.verifyCodeExpires = new Date(Date.now() + 20 * 60 * 1000); // 20 minutes
     return code;
 };
 

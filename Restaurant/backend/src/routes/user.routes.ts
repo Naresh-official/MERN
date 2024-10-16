@@ -1,9 +1,16 @@
 import { Router } from "express";
-import { login, signup } from "../controllers/user.controller.js";
+import {
+    login,
+    logout,
+    signup,
+    verifyEmail,
+} from "../controllers/user.controller.js";
 
 const router = Router();
 
-router.route("/signup").post(signup);
-router.route("/login").post(login);
+router.post("/signup", signup);
+router.post("/login", login);
+router.get("/logout", logout);
+router.patch("/verify", verifyEmail);
 
 export default router;
