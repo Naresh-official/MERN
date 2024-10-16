@@ -5,4 +5,8 @@
     :root {
         --radius: 0.5rem;
     }
+    body {
+        @apply overflow-x-hidden;
+        @apply bg-neutral-950 text-neutral-50 min-h-screen w-screen;
+    }
 }
