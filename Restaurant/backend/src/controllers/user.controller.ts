@@ -83,7 +83,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             "email" | "password"
         >;
         const user: IUser | null = await User.findOne({ email }).select(
-            "+password",
+            "+password"
         );
         if (!user) {
             res.status(404).json({
@@ -154,17 +154,25 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
 
 export const verifyEmail = async (
     req: Request,
-    res: Response,
+    res: Response
 ): Promise<void> => {
     const { code, email } = req.query as { code: string; email: string };
     const user: IUser | null = await User.findOne({ email }).select(
-        "+verifyCode",
+        "+verifyCode"
     );
     if (!user) {
         res.status(404).json({
             success: false,
             statusCode: 404,
             message: "User not found",
+        });
+        return;
+    }
+    if (user.isVerified) {
+        res.status(400).json({
+            success: false,
+            statusCode: 400,
+            message: "Email already verified. Please login",
         });
         return;
     }
@@ -177,7 +185,8 @@ export const verifyEmail = async (
         res.status(401).json({
             success: false,
             statusCode: 401,
-            message: "Verification code expired, User deleted",
+            message:
+                "Verification code expired, User deleted. Please Sign up again",
         });
         return;
     }
@@ -200,7 +209,7 @@ export const verifyEmail = async (
 
 export const deleteAccount = async (
     req: Request,
-    res: Response,
+    res: Response
 ): Promise<void> => {
     try {
         const { user } = req;
@@ -229,7 +238,7 @@ export const deleteAccount = async (
 
 export const checkUserwithEmail = async (
     req: Request,
-    res: Response,
+    res: Response
 ): Promise<void> => {
     try {
         const { email } = req.params;
