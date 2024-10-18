@@ -3,42 +3,54 @@ import { isValidEmailType } from "@/lib/services";
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import {
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSlot,
+} from "@/components/ui/input-otp";
 
-function Login() {
+function VerifyEmail() {
     const [err, setErr] = useState<string>("");
     const [formData, setFormData] = useState<{
         email: string;
-        password: string;
+        code: string;
     }>({
         email: "",
-        password: "",
+        code: "",
     });
     const navigate = useNavigate();
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            if (!formData.email || !formData.password) {
+            if (!formData.email || !formData.code) {
                 throw new Error("Please fill in all fields");
             }
             if (!isValidEmailType(formData.email)) {
                 throw new Error("Please enter a valid email address");
             }
             setErr("");
-            const { data } = await axios.post(
-                `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/login`,
-                formData,
+            const { data } = await axios.patch(
+                `${
+                    import.meta.env.VITE_BASE_URL || ""
+                }/api/v1/user/verify?email=${formData.email}&code=${
+                    formData.code
+                }`,
                 {
                     withCredentials: true,
-                },
+                }
             );
+            console.log(data);
             if (data.success) {
-                navigate("/");
+                navigate("/login");
             }
         } catch (error: any) {
-            if (error?.response?.data?.message === "Please verify your email") {
-                navigate("/verify-account");
-            }
-            setErr(error.message);
+            setErr(
+                error?.response?.data?.message ||
+                    error.message ||
+                    "Internal server error"
+            );
         }
     };
     return (
@@ -49,7 +61,7 @@ function Login() {
                 </h1>
                 <h3 className="text-2xl mt-10 mb-5">Login to your account</h3>
                 <form
-                    onSubmit={handleLogin}
+                    onSubmit={handleVerify}
                     className="w-full flex flex-col gap-6 text-xl"
                 >
                     <input
@@ -61,18 +73,29 @@ function Login() {
                         }
                         className="w-full px-4 py-2 rounded-md bg-zinc-800 outline-none"
                     />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                password: e.target.value,
-                            })
-                        }
-                        className="w-full px-4 py-2 rounded-md bg-zinc-800 outline-none"
-                    />
+                    <div className="w-full flex items-center justify-center">
+                        <InputOTP
+                            maxLength={6}
+                            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                            value={formData.code}
+                            onChange={(newValue: string) =>
+                                setFormData({
+                                    ...formData,
+                                    code: newValue,
+                                })
+                            }
+                        >
+                            <InputOTPGroup className="bg-zinc-800">
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                                <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                        </InputOTP>
+                    </div>
+
                     {err && (
                         <p className="text-red-600 font-medium text-lg">
                             {err}
@@ -82,7 +105,7 @@ function Login() {
                         type="submit"
                         className="w-full text-xl mt-5 bg-orange-600 hover:bg-orange-500"
                     >
-                        Login
+                        Verify Account
                     </Button>
                 </form>
 
@@ -100,4 +123,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default VerifyEmail;
