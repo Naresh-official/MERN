@@ -168,6 +168,14 @@ export const verifyEmail = async (
         });
         return;
     }
+    if (user.isVerified) {
+        res.status(400).json({
+            success: false,
+            statusCode: 400,
+            message: "Email already verified. Please login",
+        });
+        return;
+    }
     if (
         !user.isVerified &&
         user.verifyCodeExpires &&
@@ -177,7 +185,8 @@ export const verifyEmail = async (
         res.status(401).json({
             success: false,
             statusCode: 401,
-            message: "Verification code expired, User deleted",
+            message:
+                "Verification code expired, User deleted. Please Sign up again",
         });
         return;
     }
