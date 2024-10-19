@@ -29,7 +29,9 @@ function Signup() {
     const checkEmailIsUnique = async (email: string) => {
         try {
             const { data } = await axios.get(
-                `${import.meta.env.VITE_BASE_URL || ""}/api/v1/user/check/${email}`,
+                `${
+                    import.meta.env.VITE_BASE_URL || ""
+                }/api/v1/user/check/${email}`
             );
             if (data?.data.found) return false;
             return true;
@@ -53,7 +55,7 @@ function Signup() {
                 formData,
                 {
                     withCredentials: true,
-                },
+                }
             );
             if (data.success) {
                 navigate("/login");
