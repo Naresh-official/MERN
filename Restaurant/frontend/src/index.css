@@ -4,6 +4,6 @@
 
 @layer base {
     body {
-        @apply bg-neutral-950 min-h-screen w-screen text-neutral-50;
+        @apply bg-neutral-950 min-h-screen w-screen overflow-x-hidden text-neutral-50;
     }
 }
