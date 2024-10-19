@@ -1,15 +1,22 @@
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./pages/Login.tsx";
-import Signup from "./pages/Signup.tsx";
-import VerifyEmail from "./pages/VerifyEmail.tsx";
+import Login from "./pages/auth/Login.tsx";
+import Signup from "./pages/auth/Signup.tsx";
+import VerifyEmail from "./pages/auth/VerifyEmail.tsx";
+import Landing from "./pages/Landing.tsx";
+import Layout from "./Layout.tsx";
 
 const route = createBrowserRouter([
     {
         path: "/",
-        element: <App />,
+        element: <Layout />,
+        children: [
+            {
+                path: "",
+                element: <Landing />,
+            },
+        ],
     },
     {
         path: "/login",
@@ -26,5 +33,5 @@ const route = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-    <RouterProvider router={route} />,
+    <RouterProvider router={route} />
 );
