@@ -55,7 +55,7 @@ function VerifyEmail() {
     };
     return (
         <div className="w-full min-h-screen h-full flex justify-center items-center">
-            <div className="md:w-[500px] w-[90%] flex flex-col items-center p-4 rounded-xl border-2 border-neutral-800 shadow-lg shadow-neutral-700">
+            <div className="md:w-[500px] w-[90%] flex flex-col items-center p-4 rounded-xl border-2 border-orange-500">
                 <h1 className="text-5xl font-bold text-orange-500">
                     Mern Eats
                 </h1>

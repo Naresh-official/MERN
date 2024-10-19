@@ -6,7 +6,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
 export default function Cart() {
