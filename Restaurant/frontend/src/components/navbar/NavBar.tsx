@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { AlignJustify, Menu, UtensilsCrossed } from "lucide-react";
+import { Menu, ShoppingCart, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -21,15 +20,15 @@ function NavBar() {
                     </span>
                 </Link>
                 <nav className="ml-auto hidden lg:flex items-center gap-4 sm:gap-6 text-md font-medium ">
-                    <Link
-                        className="hover:underline underline-offset-4"
-                        to={"/"}
-                    >
+                    <Link to={"/cart"}>
+                        <ShoppingCart />
+                    </Link>
+                    <Link className="" to={"/menu"}>
                         Menu
                     </Link>
                     <Link
                         className="hover:underline underline-offset-4"
-                        to={"/"}
+                        to={"/about"}
                     >
                         About
                     </Link>
