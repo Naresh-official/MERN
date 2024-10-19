@@ -6,7 +6,7 @@ function Layout() {
     return (
         <div className="bg-black text-white min-h-screen w-screen overflow-x-hidden">
             <NavBar />
-            <Outlet />
+            <Outlet/>
             <div className="mb-auto">
                 <Footer />
             </div>

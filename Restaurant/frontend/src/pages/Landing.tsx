@@ -4,21 +4,20 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { StarsBackground } from "@/components/ui/stars-background";
 import { Clock, Star, MapPin } from "lucide-react";
 
-
 export default function Landing() {
     return (
         <div className="flex flex-col min-h-screen bg-neutral-950 text-orange-50">
             <main className="flex-1">
                 <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
                     <Spotlight
-                        className="-top-40 left-0 md:left-60 md:-top-20"
+                        className="-top-24 w-screen left-0 md:left-60 md:-top-20"
                         fill="orange"
                     />
                     <StarsBackground />
                     <div className="container px-4 md:px-6">
                         <div className="flex p-5 flex-col w-1/2 mx-auto items-center space-y-4 text-center">
                             <div className="">
-                                <h1 className="text-3xl text-center w-full m-5 font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                                <h1 className="flex justify-center text-3xl text-center w-full my-5 font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                                     Welcome to MernEats
                                 </h1>
                                 <p className="mx-auto max-w-[700px] text-orange-200 md:text-xl">

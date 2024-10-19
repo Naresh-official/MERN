@@ -3,7 +3,7 @@ import { UtensilsCrossed, Users, Leaf, MapPin } from "lucide-react";
 
 export default function About() {
     return (
-        <div className="min-h-screen mt-10 bg-neutral-950 text-neutral-50 p-4 md:p-6 lg:p-8">
+        <div className="min-h-screen mt-16 md:mt-10 bg-neutral-950 text-neutral-50 p-4 md:p-6 lg:p-8">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-4xl font-bold mb-8 text-orange-400">
                     About MernEats

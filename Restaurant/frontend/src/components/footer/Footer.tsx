@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
     return (
-        <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-orange-800">
+        <footer className="w-screen flex flex-col gap-2 sm:flex-row py-6 shrink-0 items-center px-4 md:px-6 border-t border-orange-800">
             <p className="text-xs text-orange-400">
                 © 2024 MernEats. All rights reserved.
             </p>

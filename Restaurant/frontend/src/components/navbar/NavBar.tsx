@@ -8,8 +8,10 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import { useState } from "react";
 
 function NavBar() {
+    const [open, setOpen] = useState<boolean>(false);
     return (
         <div className="fixed w-screen top-0 z-10 bg-neutral-950 shadow-sm shadow-orange-900">
             <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -48,8 +50,11 @@ function NavBar() {
                         <Link to={"/signup"}>Sign Up</Link>
                     </Button>
                 </nav>
-                <div className="lg:hidden ml-auto">
-                    <Sheet>
+                <div className="lg:hidden flex gap-8 ml-auto">
+                    <Link to={"/cart"}>
+                        <ShoppingCart />
+                    </Link>
+                    <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger>
                             <Menu />
                         </SheetTrigger>
@@ -67,6 +72,14 @@ function NavBar() {
                                         <Link
                                             className="hover:underline underline-offset-4 block px-4 py-2"
                                             to={"/"}
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            Home
+                                        </Link>
+                                        <Link
+                                            className="hover:underline underline-offset-4 block px-4 py-2"
+                                            to={"/menu"}
+                                            onClick={() => setOpen(false)}
                                         >
                                             Menu
                                         </Link>
@@ -74,7 +87,8 @@ function NavBar() {
                                     <li>
                                         <Link
                                             className="hover:underline underline-offset-4 block px-4 py-2"
-                                            to={"/"}
+                                            to={"/about"}
+                                            onClick={() => setOpen(false)}
                                         >
                                             About
                                         </Link>
@@ -82,7 +96,8 @@ function NavBar() {
                                     <li>
                                         <Link
                                             className="hover:underline underline-offset-4 block px-4 py-2"
-                                            to={"/"}
+                                            to={"/contact"}
+                                            onClick={() => setOpen(false)}
                                         >
                                             Contact
                                         </Link>
@@ -91,6 +106,7 @@ function NavBar() {
                                         <Link
                                             className="hover:underline underline-offset-4 block px-4 py-2"
                                             to={"/login"}
+                                            onClick={() => setOpen(false)}
                                         >
                                             Login
                                         </Link>
@@ -99,6 +115,7 @@ function NavBar() {
                                         <Link
                                             className="hover:underline underline-offset-4 block px-4 py-2"
                                             to={"/signup"}
+                                            onClick={() => setOpen(false)}
                                         >
                                             Sign Up
                                         </Link>
